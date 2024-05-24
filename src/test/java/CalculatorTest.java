@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import static org.junit.jupiter.api.Assertions.*;
 class CalculatorTest {
     private Calculator cal;
@@ -42,19 +44,27 @@ class CalculatorTest {
     void multiply() {
         assertEquals(15, cal.Multiply(5, 3));
     }
-    @ParameterizedTest
-    @CsvFileSource(resources = "/divide_parameters.csv")
-    void divide(int a, int b, double result) {
-        assertEquals(result, cal.Divide(a, b), 0.0001);
-    }
 
-    @Test
-    void divideByZero() {
-        assertThrows(IllegalArgumentException.class, () -> cal.Divide(6, 0));
-    }
     @ParameterizedTest
     @CsvFileSource(resources = "/add_parameters.csv")
     void add(int a, int b, int result) {
         assertEquals(result, cal.Add(a, b));
+    }
+    @ParameterizedTest
+    @ValueSource(ints = {2, 4, 6, 8, 10})
+    void checkEvenNumber(int number) {
+        assertEquals(0, number % 2,
+                "Supplied number is not an even number");
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/divide_parameters.csv", nullValues = "NULL")
+    void divide(int a, int b, String expectedStr) {
+        if (b == 0) {
+            assertThrows(ArithmeticException.class, () -> cal.Divide(a, b));
+        } else {
+            double expected = Double.parseDouble(expectedStr);
+            assertEquals(expected, cal.Divide(a, b));
+        }
     }
 }
