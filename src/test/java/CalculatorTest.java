@@ -42,14 +42,19 @@ class CalculatorTest {
     void multiply() {
         assertEquals(15, cal.Multiply(5, 3));
     }
-    @Test
-    void divide() {
-        assertEquals(2, cal.Divide(6, 3));
+    @ParameterizedTest
+    @CsvFileSource(resources = "/divide_parameters.csv")
+    void divide(int a, int b, double result) {
+        assertEquals(result, cal.Divide(a, b), 0.0001);
     }
 
     @Test
     void divideByZero() {
         assertThrows(IllegalArgumentException.class, () -> cal.Divide(6, 0));
     }
-
+    @ParameterizedTest
+    @CsvFileSource(resources = "/add_parameters.csv")
+    void add(int a, int b, int result) {
+        assertEquals(result, cal.Add(a, b));
+    }
 }
