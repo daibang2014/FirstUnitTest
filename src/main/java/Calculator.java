@@ -39,7 +39,7 @@ public class Calculator {
 
     public double Divide(int a, int b){
         if (b == 0) {
-            throw new IllegalArgumentException("Division by zero is not allowed.");
+            throw new ArithmeticException("Devide by zero.");
         }
         return (double) a / b;
     }
